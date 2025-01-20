@@ -1,0 +1,24 @@
+#include <Windows.h>
+#include <iostream>
+
+int main() {
+    // ชื่อของ Mutex ที่ Roblox ใช้
+    const char* robloxMutexName = "ROBLOX_singletonMutex";
+
+    // สร้าง Mutex ด้วยชื่อเดียวกัน
+    HANDLE hMutex = CreateMutexA(NULL, TRUE, robloxMutexName);
+
+    if (hMutex == NULL || GetLastError() == ERROR_ALREADY_EXISTS) {
+        std::cerr << "ไม่สามารถสร้าง Mutex หรือ Mutex มีอยู่แล้ว. Roblox อาจไม่สามารถรันซ้อนกันได้." << std::endl;
+        std::cerr << "ข้อผิดพลาด: " << GetLastError() << std::endl;
+    } else {
+        std::cout << "สร้าง Mutex สำเร็จ! Roblox จะรันหลายอินสแตนซ์ได้." << std::endl;
+    }
+
+    std::cout << "ปล่อยให้โปรแกรมนี้รันอยู่ขณะเปิด Roblox. กด Enter เพื่อออก." << std::endl;
+    std::cin.get();
+
+    // ปิด Mutex ก่อนออกจากโปรแกรม
+    CloseHandle(hMutex);
+    return 0;
+}
